@@ -71,7 +71,7 @@ const Main = ({ navigation }) => {
   };
 
   const handleNavigate = (user) => {
-    navigation.navigate('User', { user, params: { title: 'Caguei' } });
+    navigation.navigate('User', { user });
   };
 
   const { newUser, users, loading } = state;
