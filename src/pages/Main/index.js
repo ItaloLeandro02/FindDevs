@@ -7,7 +7,7 @@ import {
   Container,
   Form,
   Input,
-  SubmitButton,
+  Button,
   List,
   User,
   Avatar,
@@ -66,8 +66,13 @@ const Main = ({ navigation }) => {
 
       Keyboard.dismiss();
     } catch (error) {
-      console.tron.log(error);
+      setState({ ...state, loading: false });
     }
+  };
+
+  const handleDeleteAllUsers = () => {
+    setState({ ...state, users: [] });
+    AsyncStorage.clear();
   };
 
   const handleNavigate = (user) => {
@@ -89,13 +94,16 @@ const Main = ({ navigation }) => {
           onSubmitEditing={handleAddUser}
         />
 
-        <SubmitButton loading={loading} onPress={handleAddUser}>
+        <Button loading={loading} onPress={handleAddUser}>
           {loading ? (
             <ActivityIndicator color="#FFF" />
           ) : (
             <Icon name="add" size={20} color="#FFF" />
           )}
-        </SubmitButton>
+        </Button>
+        <Button onPress={() => handleDeleteAllUsers()}>
+          <Icon name="delete-forever" size={20} color="#FFF" />
+        </Button>
       </Form>
 
       <List
