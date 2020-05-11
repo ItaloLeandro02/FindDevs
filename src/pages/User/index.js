@@ -1,27 +1,14 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  Container,
-  Header,
-  Avatar,
-  Name,
-  Bio,
-  Stars,
-  Starred,
-  OwnerAvatar,
-  Info,
-  Title,
-  Author,
-  Loading,
-  NoFavorites,
-  IconAlert,
-} from './styles';
+import Star from '../../components/Star';
+import EmptyListStars from '../../components/EmptyListStars';
+import { Container, Header, Avatar, Name, Bio, Stars, Loading } from './styles';
 import api from '../../services/api';
 
 const User = ({ navigation, route }) => {
   const [state, setState] = useState({
-    starts: [],
+    stars: [],
     loading: false,
   });
   const { user } = route.params;
@@ -38,45 +25,32 @@ const User = ({ navigation, route }) => {
 
       const response = await api.get(`/users/${user.login}/starred`);
 
-      setState({ ...state, starts: response.data, loading: false });
+      setState({ ...state, stars: response.data, loading: false });
     };
 
     getDataUser();
   }, [navigation, route.name]);
 
-  const { starts, loading } = state;
+  const { stars, loading } = state;
 
   return (
     <Container>
       <Header>
         <Avatar source={{ uri: user.avatar }} />
-        <Name>{user.name}</Name>
+        {user.name ? <Name>{user.name}</Name> : <Name>{user.login}</Name>}
         <Bio>{user.bio}</Bio>
       </Header>
 
-      {loading && <Loading size={50} />}
-
-      {!loading &&
-        (starts.length > 0 ? (
-          <Stars
-            data={starts}
-            keyExtractor={(star) => String(star.id)}
-            renderItem={({ item }) => (
-              <Starred>
-                <OwnerAvatar source={{ uri: item.owner.avatar_url }} />
-                <Info>
-                  <Title>{item.name}</Title>
-                  <Author>{item.owner.login}</Author>
-                </Info>
-              </Starred>
-            )}
-          />
-        ) : (
-          <>
-            <NoFavorites>Sem favoritos</NoFavorites>
-            <IconAlert />
-          </>
-        ))}
+      {loading ? (
+        <Loading />
+      ) : (
+        <Stars
+          data={stars}
+          keyExtractor={(star) => String(star.id)}
+          renderItem={({ item }) => <Star star={item} />}
+          ListEmptyComponent={<EmptyListStars />}
+        />
+      )}
     </Container>
   );
 };

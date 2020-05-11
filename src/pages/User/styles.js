@@ -1,101 +1,65 @@
 import styled from 'styled-components/native';
-import { ActivityIndicator } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ActivityIndicator, Dimensions, PixelRatio } from 'react-native';
+
+const widthPercentageToDP = (widthPercent) => {
+  const screenWidth = Dimensions.get('window').width;
+  return PixelRatio.roundToNearestPixel(
+    (screenWidth * parseFloat(widthPercent)) / 100
+  );
+};
+
+const heightPercentageToDP = (heightPercent) => {
+  const screenHeight = Dimensions.get('window').height;
+  return PixelRatio.roundToNearestPixel(
+    (screenHeight * parseFloat(heightPercent)) / 100
+  );
+};
 
 export const Container = styled.View`
   flex: 1;
-  padding: 30px;
+  padding: ${widthPercentageToDP('6.3%')}px;
 `;
 
 export const Header = styled.View`
   align-items: center;
-  padding-bottom: 20px;
-  border-bottom-width: 1px;
+  padding-bottom: ${heightPercentageToDP('3%')}px;
+  border-bottom-width: ${heightPercentageToDP('0.2%')}px;
   border-color: #eee;
 `;
 
 export const Avatar = styled.Image`
-  width: 100px;
-  height: 100px;
-  border-radius: 50px;
+  width: ${widthPercentageToDP('20.9%')}px;
+  height: ${heightPercentageToDP('14.9%')}px;
+  border-radius: ${widthPercentageToDP('10.5%')}px;
   background: #eee;
 `;
 
 export const Name = styled.Text`
-  font-size: 20px;
+  font-size: ${widthPercentageToDP('4.2%')}px;
   color: #333;
   font-weight: bold;
-  margin-top: 10px;
+  margin-top: ${heightPercentageToDP('1.5%')}px;
   text-align: center;
 `;
 
 export const Bio = styled.Text`
-  font-size: 14px;
-  line-height: 18px;
+  font-size: ${widthPercentageToDP('3%')}px;
+  line-height: ${heightPercentageToDP('2.7%')}px;
   color: #999;
-  margin-top: 5px;
+  margin-top: ${heightPercentageToDP('0.8%')}px;
   text-align: center;
 `;
 
 export const Stars = styled.FlatList.attrs({
   showsVerticalScrollIndicator: false,
+  initialNumToRender: 5,
 })`
-  margin-top: 20px;
+  margin-top: ${heightPercentageToDP('3%')}px;
 `;
 
-export const Starred = styled.View`
-  background: #f5f5f5;
-  border-radius: 4px;
-  padding: 10px 15px;
-  margin-bottom: 20px;
-  flex-direction: row;
-  align-items: center;
-`;
-
-export const OwnerAvatar = styled.Image`
-  width: 42px;
-  height: 42px;
-  border-radius: 21px;
-  background: #eee;
-`;
-
-export const Info = styled.View`
-  margin-left: 10px;
-  flex: 1;
-`;
-
-export const Title = styled.Text`
-  font-size: 15px;
-  font-weight: bold;
-  color: #333;
-`;
-
-export const Author = styled.Text`
-  font-size: 13px;
-  color: #666;
-  margin-top: 2px;
-`;
-
-export const Loading = styled(ActivityIndicator)`
-  justify-content: center;
-  flex: 1;
-`;
-
-export const NoFavorites = styled.Text`
-  font-size: 24px;
-  color: red;
-  font-style: italic;
-  font-weight: bold;
-  padding: 30px;
-  justify-content: center;
-  text-align: center;
-`;
-
-export const IconAlert = styled(Icon).attrs({
-  name: 'alert-circle-outline',
-  size: 70,
-  color: 'red',
+export const Loading = styled(ActivityIndicator).attrs({
+  size: widthPercentageToDP('10.5%'),
 })`
   justify-content: center;
-  text-align: center;
+  flex: 1;
 `;
