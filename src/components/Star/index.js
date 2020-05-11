@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { Author, Container, Info, OwnerAvatar, Title } from './styles';
 
@@ -12,6 +13,16 @@ const Star = ({ star }) => {
       </Info>
     </Container>
   );
+};
+
+Star.propTypes = {
+  star: PropTypes.shape({
+    owner: PropTypes.shape({
+      avatar_url: PropTypes.string,
+      login: PropTypes.string,
+    }),
+    name: PropTypes.string,
+  }).isRequired,
 };
 
 export default Star;
