@@ -1,88 +1,74 @@
 import styled from 'styled-components/native';
 import { RectButton } from 'react-native-gesture-handler';
+import { Dimensions, PixelRatio } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
+const widthPercentageToDP = (widthPercent) => {
+  const screenWidth = Dimensions.get('window').width;
+  return PixelRatio.roundToNearestPixel(
+    (screenWidth * parseFloat(widthPercent)) / 100
+  );
+};
+
+const heightPercentageToDP = (heightPercent) => {
+  const screenHeight = Dimensions.get('window').height;
+  return PixelRatio.roundToNearestPixel(
+    (screenHeight * parseFloat(heightPercent)) / 100
+  );
+};
 
 export const Container = styled.View`
   flex: 1;
-  padding: 30px;
+  padding: ${widthPercentageToDP('6.2%')}px;
 `;
 
 export const Form = styled.View`
   flex-direction: row;
-  padding-bottom: 20px;
-  border-bottom-width: 1px;
+  padding-bottom: ${heightPercentageToDP('4.4%')}px;
+  border-bottom-width: ${widthPercentageToDP('0.3%')}px;
   border-color: #eee;
 `;
 
 export const Input = styled.TextInput.attrs({
   placeholderTextColor: '#999',
+  autoCorrect: false,
+  autoCapitalize: 'none',
+  placeholder: 'Adicionar usuário',
+  returnKeyType: 'send',
 })`
   flex: 1;
-  height: 40px;
+  height: ${heightPercentageToDP('6%')}px;
   background: #eee;
-  border-radius: 4px;
-  padding: 0 15px;
-  border: 1px solid #eee;
+  border-radius: ${widthPercentageToDP('0.9%')}px;
+  padding: 0 ${widthPercentageToDP('3.1%')}px;
+  border: ${widthPercentageToDP('0.3%')}px solid #eee;
 `;
 
 export const Button = styled(RectButton)`
   justify-content: center;
   align-items: center;
   background: #7159c1;
-  border-radius: 4px;
-  margin-left: 10px;
-  padding: 0 12px;
-  opacity: ${(props) => (props.loading ? 0.7 : 1)};
+  border-radius: ${widthPercentageToDP('0.9%')}px;
+  margin-left: ${widthPercentageToDP('2.1%')}px;
+  padding: 0 ${widthPercentageToDP('2.6%')}px;
+  opacity: ${({ loading, enabled }) => (loading || !enabled ? 0.7 : 1)};
 `;
 
-export const List = styled.FlatList.attrs({
+export const IconAdd = styled(Icon).attrs({
+  name: 'add',
+  size: widthPercentageToDP('4.1%'),
+  color: '#FFF',
+})``;
+
+export const IconDeleteAll = styled(Icon).attrs({
+  name: 'delete-forever',
+  size: widthPercentageToDP('4.1%'),
+  color: '#FFF',
+})``;
+
+export const Users = styled.FlatList.attrs({
   showsVerticalScrollIndicator: false,
+  initialNumToRender: 5,
 })`
-  margin-top: 20px;
-`;
-
-export const User = styled.View`
-  align-items: center;
-  margin: 0 20px 30px;
-`;
-
-export const Avatar = styled.Image`
-  width: 64px;
-  height: 64px;
-  border-radius: 32px;
-  background: #eee;
-`;
-
-export const Name = styled.Text`
-  font-size: 14px;
-  color: #333;
-  font-weight: bold;
-  margin-top: 4px;
-  text-align: center;
-`;
-
-export const Bio = styled.Text.attrs({
-  numberOfLines: 2,
-})`
-  font-size: 13px;
-  line-height: 18px;
-  color: #999;
-  margin-top: 5px;
-  text-align: center;
-`;
-
-export const ProfileButton = styled(RectButton)`
-  margin: 10px;
-  align-self: stretch;
-  border: 4px;
-  background: #7159c1;
-  justify-content: center;
-  align-items: center;
-  height: 36px;
-`;
-
-export const ProfileButtonText = styled.Text`
-  font-size: 14px;
-  font-weight: bold;
-  color: #fff;
-  text-transform: uppercase;
+  margin-top: ${heightPercentageToDP('4.4%')}px;
 `;

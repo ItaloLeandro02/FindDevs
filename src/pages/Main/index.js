@@ -1,129 +1,88 @@
 import React, { useEffect, useState } from 'react';
-import { Keyboard, ActivityIndicator } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { ActivityIndicator, Keyboard, RefreshControl } from 'react-native';
 import PropTypes from 'prop-types';
+import { inject, observer } from 'mobx-react';
+import { toJS } from 'mobx';
+import 'mobx-react-lite/batchingForReactNative';
+
+import User from '../../components/User';
+import EmptyListUsers from '../../components/EmptyListUsers';
+
 import {
+  Button,
   Container,
   Form,
+  IconAdd,
+  IconDeleteAll,
   Input,
-  Button,
-  List,
-  User,
-  Avatar,
-  Name,
-  Bio,
-  ProfileButton,
-  ProfileButtonText,
+  Users,
 } from './styles';
 
-import api from '../../services/api';
+const Main = inject('usersStore')(
+  observer(({ navigation, usersStore }) => {
+    const [state, setState] = useState({
+      newUser: '',
+      loading: false,
+    });
 
-const Main = ({ navigation }) => {
-  const [state, setState] = useState({
-    newUser: '',
-    users: [],
-    loading: false,
-  });
+    useEffect(() => {
+      usersStore.getUsers();
+    }, []);
 
-  useEffect(() => {
-    const getFavoritesStorage = async () => {
-      const { users } = state;
+    const handleAddUser = async () => {
+      const { newUser } = state;
 
-      if (users.length > 0) {
-        AsyncStorage.setItem('users', JSON.stringify(users));
-      } else {
-        const usersStorage = await AsyncStorage.getItem('users');
-
-        if (usersStorage) {
-          setState({ ...state, users: JSON.parse(usersStorage) });
-        }
-      }
-    };
-
-    getFavoritesStorage();
-  }, [state.users]);
-
-  const handleAddUser = async () => {
-    try {
-      const { newUser, users } = state;
       setState({ ...state, loading: true });
-
-      const response = await api.get(`/users/${newUser}`);
-
-      const data = {
-        name: response.data.name,
-        login: response.data.login,
-        bio: response.data.bio,
-        avatar: response.data.avatar_url,
-      };
-
-      setState({
-        users: [...users, data],
-        newUser: '',
-        loading: false,
-      });
+      await usersStore.fetchUserAsync(newUser);
+      setState({ ...state, newUser: '', loading: false });
 
       Keyboard.dismiss();
-    } catch (error) {
-      setState({ ...state, loading: false });
-    }
-  };
+    };
 
-  const handleDeleteAllUsers = () => {
-    setState({ ...state, users: [] });
-    AsyncStorage.clear();
-  };
+    const { newUser, loading } = state;
+    const { users } = usersStore;
 
-  const handleNavigate = (user) => {
-    navigation.navigate('User', { user });
-  };
+    return (
+      <Container>
+        <Form>
+          <Input
+            value={newUser}
+            onChangeText={(text) => setState({ ...state, newUser: text })}
+            onSubmitEditing={handleAddUser}
+          />
 
-  const { newUser, users, loading } = state;
+          <Button enabled loading={loading} onPress={handleAddUser}>
+            {loading ? <ActivityIndicator color="#FFF" /> : <IconAdd />}
+          </Button>
+          <Button
+            enabled={users.length > 0}
+            onPress={() => usersStore.deleteAllUsers()}
+          >
+            <IconDeleteAll />
+          </Button>
+        </Form>
 
-  return (
-    <Container>
-      <Form>
-        <Input
-          autoCorrect={false}
-          autoCapitalize="none"
-          placeholder="Adicionar usuário"
-          value={newUser}
-          onChangeText={(text) => setState({ ...state, newUser: text })}
-          returnKeyType="send"
-          onSubmitEditing={handleAddUser}
-        />
-
-        <Button loading={loading} onPress={handleAddUser}>
-          {loading ? (
-            <ActivityIndicator color="#FFF" />
-          ) : (
-            <Icon name="add" size={20} color="#FFF" />
+        <Users
+          data={toJS(users)}
+          refreshing={loading}
+          refreshControl={
+            <RefreshControl
+              refreshing={loading}
+              onRefresh={async () => {
+                await usersStore.getUsers();
+              }}
+            />
+          }
+          keyExtractor={(user) => String(user.login)}
+          renderItem={({ item }) => (
+            <User navigation={navigation} user={item} />
           )}
-        </Button>
-        <Button onPress={() => handleDeleteAllUsers()}>
-          <Icon name="delete-forever" size={20} color="#FFF" />
-        </Button>
-      </Form>
-
-      <List
-        data={users}
-        keyExtractor={(user) => user.login}
-        renderItem={({ item }) => (
-          <User>
-            <Avatar source={{ uri: item.avatar }} />
-            <Name>{item.name}</Name>
-            <Bio>{item.bio}</Bio>
-
-            <ProfileButton onPress={() => handleNavigate(item)}>
-              <ProfileButtonText>ver perfil</ProfileButtonText>
-            </ProfileButton>
-          </User>
-        )}
-      />
-    </Container>
-  );
-};
+          ListEmptyComponent={<EmptyListUsers />}
+        />
+      </Container>
+    );
+  })
+);
 
 Main.propTypes = {
   navigation: PropTypes.shape({
