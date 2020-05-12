@@ -4,7 +4,15 @@ import PropTypes from 'prop-types';
 import Star from '../../components/Star';
 import StarShimmer from '../../components/StarShimmer';
 import EmptyListStars from '../../components/EmptyListStars';
-import { Container, Header, Avatar, Name, Bio, Stars } from './styles';
+import {
+  Container,
+  Header,
+  Avatar,
+  Name,
+  Bio,
+  Stars,
+  TextHeader,
+} from './styles';
 import api from '../../services/api';
 
 const User = ({ navigation, route }) => {
@@ -52,6 +60,7 @@ const User = ({ navigation, route }) => {
         <Stars
           data={stars}
           keyExtractor={(star) => String(star.id)}
+          ListHeaderComponent={<TextHeader>Favoritos</TextHeader>}
           renderItem={({ item }) => <Star star={item} />}
           ListEmptyComponent={<EmptyListStars />}
         />

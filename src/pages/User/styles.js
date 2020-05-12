@@ -56,3 +56,10 @@ export const Stars = styled.FlatList.attrs({
 })`
   margin-top: ${heightPercentageToDP('3%')}px;
 `;
+
+export const TextHeader = styled.Text`
+  font-size: ${widthPercentageToDP('5%')}px;
+  font-weight: bold;
+  padding-bottom: ${heightPercentageToDP('2%')}px;
+  color: #333;
+`;
