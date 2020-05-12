@@ -2,8 +2,9 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Star from '../../components/Star';
+import StarShimmer from '../../components/StarShimmer';
 import EmptyListStars from '../../components/EmptyListStars';
-import { Container, Header, Avatar, Name, Bio, Stars, Loading } from './styles';
+import { Container, Header, Avatar, Name, Bio, Stars } from './styles';
 import api from '../../services/api';
 
 const User = ({ navigation, route }) => {
@@ -42,7 +43,11 @@ const User = ({ navigation, route }) => {
       </Header>
 
       {loading ? (
-        <Loading />
+        <>
+          <StarShimmer />
+          <StarShimmer />
+          <StarShimmer />
+        </>
       ) : (
         <Stars
           data={stars}

@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import { ActivityIndicator, Dimensions, PixelRatio } from 'react-native';
+import { Dimensions, PixelRatio } from 'react-native';
 
 const widthPercentageToDP = (widthPercent) => {
   const screenWidth = Dimensions.get('window').width;
@@ -55,11 +55,4 @@ export const Stars = styled.FlatList.attrs({
   initialNumToRender: 5,
 })`
   margin-top: ${heightPercentageToDP('3%')}px;
-`;
-
-export const Loading = styled(ActivityIndicator).attrs({
-  size: widthPercentageToDP('10.5%'),
-})`
-  justify-content: center;
-  flex: 1;
 `;
