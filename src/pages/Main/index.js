@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Keyboard, RefreshControl } from 'react-native';
+import { ActivityIndicator, Keyboard } from 'react-native';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 import { toJS } from 'mobx';
 import 'mobx-react-lite/batchingForReactNative';
 
 import User from '../../components/User';
+import UserShimmer from '../../components/UserShimmer';
 import EmptyListUsers from '../../components/EmptyListUsers';
 
 import {
@@ -62,23 +63,18 @@ const Main = inject('usersStore')(
           </Button>
         </Form>
 
-        <Users
-          data={toJS(users)}
-          refreshing={loading}
-          refreshControl={
-            <RefreshControl
-              refreshing={loading}
-              onRefresh={async () => {
-                await usersStore.getUsers();
-              }}
-            />
-          }
-          keyExtractor={(user) => String(user.login)}
-          renderItem={({ item }) => (
-            <User navigation={navigation} user={item} />
-          )}
-          ListEmptyComponent={<EmptyListUsers />}
-        />
+        {loading ? (
+          <UserShimmer />
+        ) : (
+          <Users
+            data={toJS(users)}
+            keyExtractor={(user) => String(user.login)}
+            renderItem={({ item }) => (
+              <User navigation={navigation} user={item} />
+            )}
+            ListEmptyComponent={<EmptyListUsers />}
+          />
+        )}
       </Container>
     );
   })
