@@ -1,6 +1,5 @@
 import { observable, action, decorate } from 'mobx';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Alert } from 'react-native';
 
 import api from '../services/api';
 
@@ -26,7 +25,7 @@ export default class UsersStore {
         this.users.push(data);
       }
     } catch (error) {
-      Alert.alert(error.response.message);
+      console.log(error);
     } finally {
       this.isRefresing = false;
       this.getUsers();
