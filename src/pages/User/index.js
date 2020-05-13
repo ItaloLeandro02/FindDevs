@@ -61,7 +61,9 @@ const User = ({ navigation, route }) => {
           data={stars}
           keyExtractor={(star) => String(star.id)}
           ListHeaderComponent={<TextHeader>Favoritos</TextHeader>}
-          renderItem={({ item }) => <Star star={item} />}
+          renderItem={({ item }) => (
+            <Star navigation={navigation} star={item} />
+          )}
           ListEmptyComponent={<EmptyListStars />}
         />
       )}
