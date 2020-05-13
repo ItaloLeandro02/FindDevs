@@ -60,3 +60,6 @@ buck-out/
 
 # Lock files
 *.lock
+
+# Medias for README.md
+src/medias
